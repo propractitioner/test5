@@ -27,14 +27,15 @@ def plot_sky(time, location):
         alt, az, _ = observer.at(t).altaz()
 
         # 투영 설정 수정
-        center = star_positions.field_of_view()
-        projection = build_stereographic_projection(center)
-        x, y = projection(star_positions)
+        center_alt = 90  # 천정
+        center_az = 0
+        projection = build_stereographic_projection(np.radians(center_alt), np.radians(center_az))
+        x, y = projection(az.radians, (90 - alt.degrees) * np.pi / 180)
 
         fig, ax = plt.subplots(figsize=(10, 10))
         ax.scatter(x, y, s=10/stars.magnitude, alpha=0.5)
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(-1, 1)
+        ax.set_xlim(-2, 2)
+        ax.set_ylim(-2, 2)
         ax.set_aspect('equal')
         ax.axis('off')
 
@@ -42,9 +43,9 @@ def plot_sky(time, location):
         directions = ['N', 'E', 'S', 'W']
         for i, direction in enumerate(directions):
             theta = np.pi/2 - i*np.pi/2
-            x = np.cos(theta)
-            y = np.sin(theta)
-            ax.text(x*1.1, y*1.1, direction, ha='center', va='center')
+            x = 1.8 * np.cos(theta)
+            y = 1.8 * np.sin(theta)
+            ax.text(x, y, direction, ha='center', va='center')
 
         return fig
     except Exception as e:

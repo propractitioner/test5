@@ -27,13 +27,15 @@ def plot_sky(time, location):
         alt, az, _ = observer.at(t).altaz()
 
         # 투영 설정 수정
-        projection = build_stereographic_projection(center=90)
-        x, y = projection(az.radians, alt.radians)
+        center_alt = 90
+        center_az = 0
+        projection = build_stereographic_projection(center_alt * np.pi / 180)
+        x, y = projection(az.radians, (90 - alt.degrees) * np.pi / 180)
 
         fig, ax = plt.subplots(figsize=(10, 10))
         ax.scatter(x, y, s=10/stars.magnitude, alpha=0.5)
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(-1, 1)
+        ax.set_xlim(-2, 2)
+        ax.set_ylim(-2, 2)
         ax.set_aspect('equal')
         ax.axis('off')
 

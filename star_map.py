@@ -10,26 +10,17 @@ def get_observer_location():
     # 기본값으로 서울의 위도와 경도를 사용
     return wgs84.latlon(37.5665, 126.9780)
 
+
 def plot_sky(time, location):
-    # 천체 데이터 로드
-    with load.open(hipparcos.URL) as f:
-        stars = hipparcos.load_dataframe(f)
+    # ... (이전 코드는 그대로 유지)
 
-    # 관측자 위치 설정
-    planets = load('de421.bsp')
-    earth = planets['earth']
-    observer = earth + location
-
-    # 별 위치 계산
-    t = load.timescale().from_datetime(time)
-    star_positions = earth.at(t).observe(Star.from_dataframe(stars))
-    alt, az, _ = observer.at(t).altaz()
-
-    # 투영 설정
-    center_alt = 90
-    center_az = 0
+    # 투영 설정 (라디안으로 변환)
+    center_alt = np.radians(90)
+    center_az = np.radians(0)
     projection = build_stereographic_projection(center_alt, center_az)
     x, y = projection(alt.radians, az.radians)
+
+    # ... (나머지 코드는 그대로 유지)
 
     # 플롯 생성
     fig, ax = plt.subplots(figsize=(10, 10))
